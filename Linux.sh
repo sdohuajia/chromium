@@ -86,3 +86,5 @@ echo "docker-compose.yaml 文件已创建，内容已导入。"
 # 启动 Docker Compose
 docker compose up -d
 echo "Docker Compose 已启动。"
+
+echo "部署完成，请打开浏览器操作。"
