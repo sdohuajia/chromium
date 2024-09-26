@@ -3,6 +3,10 @@
 # 脚本保存路径
 SCRIPT_PATH="$HOME/Linux.sh"
 
+# 显示 Logo
+curl -s https://raw.githubusercontent.com/sdohuajia/Hyperlane/refs/heads/main/logo.sh | bash
+sleep 3
+
 # 检查 Docker 是否已安装
 if ! command -v docker &> /dev/null; then
     echo "Docker 未安装，正在安装..."
