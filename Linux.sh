@@ -91,6 +91,18 @@ EOF
     echo "Docker Compose 已启动。"
 }
 
+# 卸载 节点 的函数
+function uninstall_docker() {
+    echo "正在停止 Docker..."
+    # 停止 Docker 容器
+    cd /root/chromium
+    docker compose down
+
+    # 删除 文件 目录
+    rm -rf /root/chromium
+    echo "节点已卸载完成。"
+}
+
 # 主菜单函数
 function main_menu() {
     while true; do
@@ -103,7 +115,8 @@ function main_menu() {
         echo "退出脚本，请按键盘 ctrl + C 退出即可"
         echo "请选择要执行的操作:"
         echo "1) 部署浏览器"
-        echo "2) 退出"
+        echo "2) 卸载节点"
+        echo "3) 退出"
         
         read -p "请输入选项: " choice
         
@@ -112,6 +125,9 @@ function main_menu() {
                 deploy_browser
                 ;;
             2)
+                uninstall_docker
+                ;;
+            3)
                 echo "退出脚本。"
                 exit 0
                 ;;
