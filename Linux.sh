@@ -3,9 +3,12 @@
 # 脚本保存路径
 SCRIPT_PATH="$HOME/Linux.sh"
 
-# 显示 Logo
-curl -s https://raw.githubusercontent.com/sdohuajia/Hyperlane/refs/heads/main/logo.sh | bash
-sleep 3
+# 检查是否以root用户运行脚本
+if [ "$(id -u)" != "0" ]; then
+    echo "此脚本需要以root用户权限运行。"
+    echo "请尝试使用 'sudo -i' 命令切换到root用户，然后再次运行此脚本。"
+    exit 1
+fi
 
 # 检查 Docker 是否已安装
 if ! command -v docker &> /dev/null; then
@@ -51,13 +54,15 @@ mkdir -p $HOME/chromium
 cd $HOME/chromium
 echo "已进入 chromium 目录"
 
-# 获取用户输入
-read -p "请输入 CUSTOM_USER: " CUSTOM_USER
-read -sp "请输入 PASSWORD: " PASSWORD
-echo
+# 创建 docker-compose.yaml 文件并启动的函数
+function deploy_browser() {
+    # 获取用户输入
+    read -p "请输入 CUSTOM_USER: " CUSTOM_USER
+    read -sp "请输入 PASSWORD: " PASSWORD
+    echo
 
-# 创建 docker-compose.yaml 文件
-cat <<EOF > docker-compose.yaml
+    # 创建 docker-compose.yaml 文件
+    cat <<EOF > docker-compose.yaml
 ---
 services:
   chromium:
@@ -81,10 +86,43 @@ services:
     restart: unless-stopped
 EOF
 
-echo "docker-compose.yaml 文件已创建，内容已导入。"
+    echo "docker-compose.yaml 文件已创建，内容已导入。"
+    docker compose up -d
+    echo "Docker Compose 已启动。"
+}
 
-# 启动 Docker Compose
-docker compose up -d
-echo "Docker Compose 已启动。"
+# 主菜单函数
+function main_menu() {
+    while true; do
+        clear
+        echo "脚本由大赌社区哈哈哈哈编写，推特 @ferdie_jhovie，免费开源，请勿相信收费"
+        echo "如有问题，可联系推特，仅此只有一个号"
+        echo "新建了一个电报群，方便大家交流：t.me/Sdohua"
+        echo "部署浏览器后可挂Dawn、Functor Node、Gradient、Node pay等项目"
+        echo "================================================================"
+        echo "退出脚本，请按键盘 ctrl + C 退出即可"
+        echo "请选择要执行的操作:"
+        echo "1) 部署浏览器"
+        echo "2) 退出"
+        
+        read -p "请输入选项: " choice
+        
+        case $choice in
+            1)
+                deploy_browser
+                ;;
+            2)
+                echo "退出脚本。"
+                exit 0
+                ;;
+            *)
+                echo "无效选项，请重试。"
+                ;;
+        esac
 
-echo "部署完成，请打开浏览器操作。"
+        read -p "按任意键继续..."
+    done
+}
+
+# 调用主菜单
+main_menu
